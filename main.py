@@ -67,7 +67,7 @@ class Simulacao:
         self.jogo_rodando = False
 
         self.projeteis = []
-        self.CONSTANTE_GRAVITACIONAL = 2
+        self.CONSTANTE_GRAVITACIONAL = 100
         self.velocidade_inicial_projetil = 0
 
         self.sprite_planeta     = pg.image.load('canhao_newton/img/terraNoite.png').convert_alpha()
@@ -115,7 +115,7 @@ class Simulacao:
             topleft=False
         )
     
-    def atualizar_projeteis(self) -> None:
+    def atualizar_projeteis(self, dt) -> None:
         x_planeta       = self.planeta.posicao.x
         y_planeta       = self.planeta.posicao.y
         massa_planeta   = self.planeta.massa
@@ -145,8 +145,8 @@ class Simulacao:
                 projetil.aceleracao.x = forca.x / massa_projetil
                 projetil.aceleracao.y = forca.y / massa_projetil
 
-                projetil.velocidade   += projetil.aceleracao
-                projetil.posicao      += projetil.velocidade
+                projetil.velocidade   += projetil.aceleracao * dt
+                projetil.posicao      += projetil.velocidade * dt
 
                 distancia = (self.planeta.posicao - projetil.posicao).length()
                 if distancia < (self.planeta.raio + projetil.raio) * 0.98:
@@ -198,13 +198,17 @@ class Simulacao:
             )
 
             self.projeteis.append(projetil)
-            self.velocidade_inicial_projetil += 0.5
+            self.velocidade_inicial_projetil += 5
 
     def run(self) -> None:
+        last_time = time.time()
         self.jogo_rodando = True
         while self.jogo_rodando:
+            current_time = time.time()
+            delta_time = current_time - last_time
+            last_time = current_time
             self.event_loop()
-            self.atualizar_projeteis()
+            self.atualizar_projeteis(delta_time)
             self.desenhar_tudo()
 
             pg.display.flip()
