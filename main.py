@@ -58,7 +58,7 @@ class Corpo:
 
 class Simulacao:
     def __init__(self) -> None:
-        self.FRAMERATE = 60
+        self.FRAMERATE = 100
 
         self.ROXO_ESCURO    = (75, 0, 130)
         self.VERDE          = (0, 255, 0)
