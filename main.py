@@ -60,6 +60,10 @@ class Simulacao:
     def __init__(self) -> None:
         self.FRAMERATE = 60
 
+        self.ROXO_ESCURO    = (75, 0, 130)
+        self.VERDE          = (0, 255, 0)
+        self.fonte = pg.font.SysFont(None, 25)
+
         pg.display.set_caption('Canhão de Newton')
         self.dimensoes_tela = (1600, 900)
         self.tela = pg.display.set_mode(self.dimensoes_tela, pg.FULLSCREEN)
@@ -70,8 +74,8 @@ class Simulacao:
         self.CONSTANTE_GRAVITACIONAL = 100
         self.velocidade_inicial_projetil = 0
 
-        self.sprite_planeta     = pg.image.load('canhao_newton/img/terraNoite.png').convert_alpha()
-        self.sprite_projetil    = pg.image.load('canhao_newton/img/projetil.png').convert_alpha()
+        self.sprite_planeta     = pg.image.load(r'C:\Estudos\pygame\canhao_newton\img\terraNoite.png').convert_alpha()
+        self.sprite_projetil    = pg.image.load(r'C:\Estudos\pygame\canhao_newton\img\esfera.png').convert_alpha()
 
         x_planeta = self.tela.get_width() // 2
         y_planeta = self.tela.get_height() // 2
@@ -86,7 +90,7 @@ class Simulacao:
         )
         
         self.fundo = Sprite(
-            caminho_sprite='canhao_newton/img/ceu.png',
+            caminho_sprite=r'C:\Estudos\pygame\canhao_newton\img\ceu.png',
             transform_scale=self.dimensoes_tela,
             convert_alpha=True,
             x=0,
@@ -95,7 +99,7 @@ class Simulacao:
         )
 
         self.torre = Sprite(
-            caminho_sprite='canhao_newton/img/torre.png',
+            caminho_sprite=r'C:\Estudos\pygame\canhao_newton\img\torre.png',
             transform_scale=(250, 250),
             convert_alpha=True,
             x=self.planeta.posicao.x,
@@ -107,7 +111,7 @@ class Simulacao:
         y_canhao = self.planeta.posicao.y - self.planeta.raio - 30
 
         self.canhao = Sprite(
-            caminho_sprite='canhao_newton/img/canhao.png',
+            caminho_sprite='C:\Estudos\pygame\canhao_newton\img\canhao.png',
             transform_scale=(40, 40),
             convert_alpha=True,
             x=x_canhao,
@@ -115,7 +119,7 @@ class Simulacao:
             topleft=False
         )
     
-    def atualizar_projeteis(self, dt) -> None:
+    def atualizar_projeteis(self, dt: float) -> None:
         x_planeta       = self.planeta.posicao.x
         y_planeta       = self.planeta.posicao.y
         massa_planeta   = self.planeta.massa
@@ -156,6 +160,26 @@ class Simulacao:
                     projetil.velocidade.x = 0
                     projetil.velocidade.y = 0
 
+    def adicionar_projetil(
+        self,
+        posicao         :vector,
+        velocidade      :vector,
+        aceleracao      :vector,
+        massa           :float,
+        raio            :float
+    ) -> None:
+        projetil = Corpo(
+            massa=massa,
+            posicao=posicao,
+            velocidade=velocidade,
+            aceleracao=aceleracao,
+            raio=raio,
+            sprite=self.sprite_projetil
+        )
+
+        self.projeteis.append(projetil)
+        self.velocidade_inicial_projetil += 5
+
     def desenhar_tudo(self) -> None:
         self.fundo.desenhar(self.tela)
         self.planeta.desenhar(self.tela)
@@ -164,6 +188,35 @@ class Simulacao:
         
         for projetil in self.projeteis:
             projetil.desenhar(self.tela)
+    
+    def escrever_textos(self) -> None:
+        self.escrever_texto(
+            info=f'Projetil Atual: {len(self.projeteis)}',
+            x=10,
+            y=10
+        )
+        if self.projeteis:
+            posicao_str_x = int(self.projeteis[len(self.projeteis) - 1].posicao.x)
+            posicao_str_y = int(self.projeteis[len(self.projeteis) - 1].posicao.y)
+            self.escrever_texto(
+                info=f'Posição:     ({posicao_str_x:^5},{posicao_str_y:^5})',
+                x=10,
+                y=30
+            )
+            velocidade_str_x = int(self.projeteis[len(self.projeteis) - 1].velocidade.x)
+            velocidade_str_y = int(self.projeteis[len(self.projeteis) - 1].velocidade.y)
+            self.escrever_texto(
+                info=f'Velocidade:  ({velocidade_str_x:^5},{velocidade_str_y:^5})',
+                x=10,
+                y=50
+            )
+            aceleracao_str_x = int(self.projeteis[len(self.projeteis) - 1].aceleracao.x)
+            aceleracao_str_y = int(self.projeteis[len(self.projeteis) - 1].aceleracao.y)
+            self.escrever_texto(
+                info=f'Aceleração:  ({aceleracao_str_x:^5},{aceleracao_str_y:^5})',
+                x=10,
+                y=70
+            )
 
     def event_loop(self) -> None:
         for evento in pg.event.get():
@@ -180,25 +233,6 @@ class Simulacao:
                         velocidade=vector(self.velocidade_inicial_projetil, 0),
                         aceleracao=vector(0, -0.05)
                     )
-    def adicionar_projetil(
-            self,
-            posicao         :vector,
-            velocidade      :vector,
-            aceleracao      :vector,
-            massa           :float,
-            raio            :float
-        ) -> None:
-            projetil = Corpo(
-                massa=massa,
-                posicao=posicao,
-                velocidade=velocidade,
-                aceleracao=aceleracao,
-                raio=raio,
-                sprite=self.sprite_projetil
-            )
-
-            self.projeteis.append(projetil)
-            self.velocidade_inicial_projetil += 5
 
     def run(self) -> None:
         last_time = time.time()
@@ -210,9 +244,16 @@ class Simulacao:
             self.event_loop()
             self.atualizar_projeteis(delta_time)
             self.desenhar_tudo()
+            self.escrever_textos()
 
             pg.display.flip()
             self.clock.tick(self.FRAMERATE)
+    
+    def escrever_texto(self, info: str, x: int, y: int):
+        superficie_texto = self.fonte.render(str(info), True, self.VERDE)
+        retangulo_texto = superficie_texto.get_rect(topleft=(x, y))
+        pg.draw.rect(self.tela, 'Black', retangulo_texto)
+        self.tela.blit(superficie_texto, retangulo_texto)
 
 def main() -> None:
     pg.init()
