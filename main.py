@@ -188,12 +188,14 @@ class Simulacao:
             massa           :float,
             raio            :float
         ) -> None:
-            projetil = Corpo(massa=massa,
-                             posicao=posicao,
-                             velocidade=velocidade,
-                             aceleracao=aceleracao,
-                             raio=raio,
-                             sprite=self.sprite_projetil)
+            projetil = Corpo(
+                massa=massa,
+                posicao=posicao,
+                velocidade=velocidade,
+                aceleracao=aceleracao,
+                raio=raio,
+                sprite=self.sprite_projetil
+            )
 
             self.projeteis.append(projetil)
             self.velocidade_inicial_projetil += 0.5
