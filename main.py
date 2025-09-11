@@ -92,7 +92,7 @@ class Simulacao:
         y_planeta = self.tela.get_height() // 2
 
         self.planeta = Corpo(
-            massa=300_000,
+            massa=100_000,
             posicao=vector(x_planeta, y_planeta),
             raio=250,
             velocidade=vector(0, 0),
