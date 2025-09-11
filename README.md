@@ -39,7 +39,8 @@ A simulação é baseada na Lei da Gravitação Universal de Newton. A trajetór
 
 - **Linguagem:** Python
 - **Biblioteca Gráfica:** Pygame
-- **Biblioteca Padrão:** math
+- **Biblioteca time (built-in)**
+- **Módulo os (built-in)**
 
 ---
 
