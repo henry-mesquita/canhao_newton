@@ -1,6 +1,7 @@
 import pygame as pg
 import time
 from pygame import Vector2 as vector
+import os
 
 class Sprite:
     def __init__(
@@ -74,8 +75,18 @@ class Simulacao:
         self.CONSTANTE_GRAVITACIONAL = 100
         self.velocidade_inicial_projetil = 0
 
-        self.sprite_planeta     = pg.image.load(r'C:\Estudos\pygame\canhao_newton\img\terraNoite.png').convert_alpha()
-        self.sprite_projetil    = pg.image.load(r'C:\Estudos\pygame\canhao_newton\img\esfera.png').convert_alpha()
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+        IMG_DIR = os.path.join(BASE_DIR, 'img')
+
+        self.caminho_planeta    = os.path.join(IMG_DIR, 'terraNoite.png')
+        self.caminho_projetil   = os.path.join(IMG_DIR, 'projetil.png')
+        self.caminho_torre      = os.path.join(IMG_DIR, 'torre.png')
+        self.caminho_canhao     = os.path.join(IMG_DIR, 'canhao.png')
+        self.caminho_fundo      = os.path.join(IMG_DIR, 'ceu.png')
+
+        self.sprite_planeta     = pg.image.load(self.caminho_planeta).convert_alpha()
+        self.sprite_projetil    = pg.image.load(self.caminho_projetil).convert_alpha()
 
         x_planeta = self.tela.get_width() // 2
         y_planeta = self.tela.get_height() // 2
@@ -90,7 +101,7 @@ class Simulacao:
         )
         
         self.fundo = Sprite(
-            caminho_sprite=r'C:\Estudos\pygame\canhao_newton\img\ceu.png',
+            caminho_sprite=self.caminho_fundo,
             transform_scale=self.dimensoes_tela,
             convert_alpha=True,
             x=0,
@@ -99,7 +110,7 @@ class Simulacao:
         )
 
         self.torre = Sprite(
-            caminho_sprite=r'C:\Estudos\pygame\canhao_newton\img\torre.png',
+            caminho_sprite=self.caminho_torre,
             transform_scale=(250, 250),
             convert_alpha=True,
             x=self.planeta.posicao.x,
@@ -111,7 +122,7 @@ class Simulacao:
         y_canhao = self.planeta.posicao.y - self.planeta.raio - 30
 
         self.canhao = Sprite(
-            caminho_sprite='C:\Estudos\pygame\canhao_newton\img\canhao.png',
+            caminho_sprite=self.caminho_canhao,
             transform_scale=(40, 40),
             convert_alpha=True,
             x=x_canhao,
