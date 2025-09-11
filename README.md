@@ -21,7 +21,6 @@ O objetivo é fornecer uma compreensão visual e intuitiva de como a gravidade e
 - **Canhão Interativo:** Controle a velocidade inicial da bala de canhão.
 - **Física em Tempo Real:** A simulação calcula o caminho do projétil com base em fórmulas gravitacionais.
 - **Mecânica Orbital:** Atire com força suficiente para ver a bala entrar em uma órbita estável ou até atingir a velocidade de escape.
-- **Feedback Visual:** Rastros visuais claros mostram o caminho de cada projétil.
 
 ---
 
