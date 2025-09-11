@@ -81,7 +81,7 @@ class Simulacao:
         y_planeta = self.tela.get_height() // 2
 
         self.planeta = Corpo(
-            massa=90_000,
+            massa=300_000,
             posicao=vector(x_planeta, y_planeta),
             raio=250,
             velocidade=vector(0, 0),
@@ -217,6 +217,17 @@ class Simulacao:
                 x=10,
                 y=70
             )
+            massa_projetil_atual = int(self.projeteis[len(self.projeteis) - 1].massa)
+            self.escrever_texto(
+                info=f'Massa do projétil: {massa_projetil_atual}',
+                x=10,
+                y=90
+            )
+            self.escrever_texto(
+                info=f'Massa do planeta: {int(self.planeta.massa)}',
+                x=10,
+                y=110
+            )
 
     def event_loop(self) -> None:
         for evento in pg.event.get():
@@ -227,11 +238,11 @@ class Simulacao:
                     x = self.planeta.posicao.x + 10
                     y = self.planeta.posicao.y - self.planeta.raio - 35
                     self.adicionar_projetil(
-                        massa=50,
+                        massa=300,
                         posicao=vector(x, y),
-                        raio=4,
+                        raio=6,
                         velocidade=vector(self.velocidade_inicial_projetil, 0),
-                        aceleracao=vector(0, -0.05)
+                        aceleracao=vector(0, 0)
                     )
 
     def run(self) -> None:
