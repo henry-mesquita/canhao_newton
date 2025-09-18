@@ -121,6 +121,7 @@ class Simulacao:
         self.jogo_rodando: bool = False
 
         self.projeteis: list[Corpo] = []
+        self.rastro: list[Vector2] = []
         self.CONSTANTE_GRAVITACIONAL: int = 100
         self.velocidade_inicial_projetil: int = 0
 
@@ -129,7 +130,7 @@ class Simulacao:
         IMG_DIR: str = os.path.join(BASE_DIR, 'img')
 
         self.caminho_planeta: str    = os.path.join(IMG_DIR, 'terraNoite.png')
-        self.caminho_projetil: str   = os.path.join(IMG_DIR, 'projetil.png')
+        self.caminho_projetil: str   = os.path.join(IMG_DIR, 'esfera.png')
         self.caminho_torre: str      = os.path.join(IMG_DIR, 'torre.png')
         self.caminho_canhao: str     = os.path.join(IMG_DIR, 'canhao.png')
         self.caminho_fundo: str      = os.path.join(IMG_DIR, 'ceu.png')
@@ -192,11 +193,11 @@ class Simulacao:
         y_planeta       = self.planeta.posicao.y
         massa_planeta   = self.planeta.massa
         if self.projeteis:
-            for projetil in self.projeteis:
+            for i, projetil in enumerate(self.projeteis):
                 x_projetil          = projetil.posicao.x
                 y_projetil          = projetil.posicao.y
                 massa_projetil      = projetil.massa
-                
+
                 distancia = (self.planeta.posicao - projetil.posicao).length()
 
                 if distancia < 1:
@@ -227,6 +228,9 @@ class Simulacao:
                     projetil.aceleracao.y = 0
                     projetil.velocidade.x = 0
                     projetil.velocidade.y = 0
+                
+                if i == len(self.projeteis) - 1:
+                    self.rastro.append(projetil.posicao.copy())
 
     def adicionar_projetil(
         self,
@@ -257,8 +261,21 @@ class Simulacao:
             sprite=self.sprite_projetil
         )
 
+        self.rastro.clear()
         self.projeteis.append(projetil)
         self.velocidade_inicial_projetil += 5
+    
+    def desenhar_rastro(self):
+        if self.projeteis:
+            ultimo_projetil: Corpo = self.projeteis[-1]
+
+            for posicao in self.rastro:
+                center = (int(posicao.x), int(posicao.y))
+                pg.draw.circle(center=center,
+                               color=self.ROXO_ESCURO,
+                               radius=ultimo_projetil.raio // 2,
+                               width=2,
+                               surface=self.tela)
 
     def desenhar_tudo(self) -> None:
         """
@@ -269,6 +286,7 @@ class Simulacao:
         """
         self.fundo.desenhar(self.tela)
         self.planeta.desenhar(self.tela)
+        self.desenhar_rastro()
         self.torre.desenhar(self.tela)
         self.canhao.desenhar(self.tela)
         
