@@ -1,7 +1,8 @@
 import pygame as pg
 import time
-from pygame import Vector2 as vector
+from pygame import Vector2
 import os
+from typing import Optional
 
 class Sprite:
     def __init__(
@@ -13,22 +14,22 @@ class Sprite:
         convert_alpha       :bool,
         topleft             :bool
     ) -> None:
-        self.caminho_sprite = caminho_sprite
+        self.caminho_sprite: str = caminho_sprite
 
         if convert_alpha:
-            self.imagem_original = pg.image.load(caminho_sprite).convert_alpha()
+            self.imagem_original: pg.Surface = pg.image.load(caminho_sprite).convert_alpha()
         else:
-            self.imagem_original = pg.image.load(caminho_sprite).convert()
+            self.imagem_original: pg.Surface = pg.image.load(caminho_sprite).convert()
 
-        self.imagem = pg.transform.scale(self.imagem_original, transform_scale)
+        self.imagem: pg.Surface = pg.transform.scale(self.imagem_original, transform_scale)
 
         if topleft:
-            self.rect = self.imagem.get_rect(topleft=(x, y))
+            self.rect: pg.Rect = self.imagem.get_rect(topleft=(x, y))
         else:
-            self.rect = self.imagem.get_rect(center=(x, y))
+            self.rect: pg.Rect = self.imagem.get_rect(center=(x, y))
 
-        self.x = x
-        self.y = y
+        self.x: int = x
+        self.y: int = y
     
     def desenhar(self, tela: pg.Surface) -> None:
         tela.blit(self.imagem, self.rect)
@@ -38,20 +39,20 @@ class Corpo:
         self,
         massa               :float,
         raio                :float,
-        posicao             :vector,
-        velocidade          :vector,
-        aceleracao          :vector,
-        sprite              :pg.Surface = None
+        posicao             :Vector2,
+        velocidade          :Vector2,
+        aceleracao          :Vector2,
+        sprite              :Optional[pg.Surface] = None
     ) -> None:
-        self.massa          = massa
-        self.raio           = raio
-        self.posicao        = posicao
-        self.velocidade     = velocidade
-        self.aceleracao     = aceleracao
-        self.sprite         = sprite
-        self.diametro       = self.raio * 2
-        self.sprite_red     = pg.transform.scale(self.sprite, (self.diametro, self.diametro))
-        self.rect           = self.sprite_red.get_rect(center=(int(self.posicao.x), self.posicao.y))
+        self.massa: float           = massa
+        self.raio: float            = raio
+        self.posicao: Vector2       = posicao
+        self.velocidade: Vector2    = velocidade
+        self.aceleracao: Vector2    = aceleracao
+        self.sprite: pg.Surface     = sprite
+        self.diametro: float        = self.raio * 2
+        self.sprite_red: pg.Surface = pg.transform.scale(self.sprite, (self.diametro, self.diametro))
+        self.rect: pg.Rect          = self.sprite_red.get_rect(center=(int(self.posicao.x), self.posicao.y))
 
     def desenhar(self, tela: pg.Surface) -> None:
         self.rect.center = self.posicao
@@ -59,48 +60,48 @@ class Corpo:
 
 class Simulacao:
     def __init__(self) -> None:
-        self.FRAMERATE = 100
+        self.FRAMERATE: int = 100
 
-        self.ROXO_ESCURO    = (75, 0, 130)
-        self.VERDE          = (0, 255, 0)
-        self.fonte = pg.font.SysFont(None, 25)
+        self.ROXO_ESCURO: tuple[int, int, int]    = (75, 0, 130)
+        self.VERDE: tuple[int, int, int]          = (0, 255, 0)
+        self.fonte: pg.Font = pg.font.SysFont(None, 25)
 
         pg.display.set_caption('Canhão de Newton')
-        self.dimensoes_tela = (1600, 900)
-        self.tela = pg.display.set_mode(self.dimensoes_tela, pg.FULLSCREEN)
+        self.dimensoes_tela: tuple[int, int] = (1600, 900)
+        self.tela: pg.Surface = pg.display.set_mode(self.dimensoes_tela, pg.FULLSCREEN)
         self.clock = pg.Clock()
-        self.jogo_rodando = False
+        self.jogo_rodando: bool = False
 
-        self.projeteis = []
-        self.CONSTANTE_GRAVITACIONAL = 100
-        self.velocidade_inicial_projetil = 0
+        self.projeteis: list[Corpo] = []
+        self.CONSTANTE_GRAVITACIONAL: int = 100
+        self.velocidade_inicial_projetil: int = 0
 
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        BASE_DIR: str = os.path.dirname(os.path.abspath(__file__))
 
-        IMG_DIR = os.path.join(BASE_DIR, 'img')
+        IMG_DIR: str = os.path.join(BASE_DIR, 'img')
 
-        self.caminho_planeta    = os.path.join(IMG_DIR, 'terraNoite.png')
-        self.caminho_projetil   = os.path.join(IMG_DIR, 'projetil.png')
-        self.caminho_torre      = os.path.join(IMG_DIR, 'torre.png')
-        self.caminho_canhao     = os.path.join(IMG_DIR, 'canhao.png')
-        self.caminho_fundo      = os.path.join(IMG_DIR, 'ceu.png')
+        self.caminho_planeta: str    = os.path.join(IMG_DIR, 'terraNoite.png')
+        self.caminho_projetil: str   = os.path.join(IMG_DIR, 'projetil.png')
+        self.caminho_torre: str      = os.path.join(IMG_DIR, 'torre.png')
+        self.caminho_canhao: str     = os.path.join(IMG_DIR, 'canhao.png')
+        self.caminho_fundo: str      = os.path.join(IMG_DIR, 'ceu.png')
 
-        self.sprite_planeta     = pg.image.load(self.caminho_planeta).convert_alpha()
-        self.sprite_projetil    = pg.image.load(self.caminho_projetil).convert_alpha()
+        self.sprite_planeta: str     = pg.image.load(self.caminho_planeta).convert_alpha()
+        self.sprite_projetil: str    = pg.image.load(self.caminho_projetil).convert_alpha()
 
-        x_planeta = self.tela.get_width() // 2
-        y_planeta = self.tela.get_height() // 2
+        x_planeta: int = self.tela.get_width() // 2
+        y_planeta: int = self.tela.get_height() // 2
 
-        self.planeta = Corpo(
+        self.planeta: Corpo = Corpo(
             massa=100_000,
-            posicao=vector(x_planeta, y_planeta),
+            posicao=Vector2(x_planeta, y_planeta),
             raio=250,
-            velocidade=vector(0, 0),
-            aceleracao=vector(0, 0),
+            velocidade=Vector2(0, 0),
+            aceleracao=Vector2(0, 0),
             sprite=self.sprite_planeta
         )
         
-        self.fundo = Sprite(
+        self.fundo: Sprite = Sprite(
             caminho_sprite=self.caminho_fundo,
             transform_scale=self.dimensoes_tela,
             convert_alpha=True,
@@ -109,7 +110,7 @@ class Simulacao:
             topleft=True
         )
 
-        self.torre = Sprite(
+        self.torre: Sprite = Sprite(
             caminho_sprite=self.caminho_torre,
             transform_scale=(250, 250),
             convert_alpha=True,
@@ -118,10 +119,10 @@ class Simulacao:
             topleft=False
         )
 
-        x_canhao = self.planeta.posicao.x - 10
-        y_canhao = self.planeta.posicao.y - self.planeta.raio - 30
+        x_canhao: int = self.planeta.posicao.x - 10
+        y_canhao: int = self.planeta.posicao.y - self.planeta.raio - 30
 
-        self.canhao = Sprite(
+        self.canhao: Sprite = Sprite(
             caminho_sprite=self.caminho_canhao,
             transform_scale=(40, 40),
             convert_alpha=True,
@@ -131,16 +132,16 @@ class Simulacao:
         )
     
     def atualizar_projeteis(self, dt: float) -> None:
-        x_planeta       = self.planeta.posicao.x
-        y_planeta       = self.planeta.posicao.y
-        massa_planeta   = self.planeta.massa
+        x_planeta: int          = self.planeta.posicao.x
+        y_planeta: int          = self.planeta.posicao.y
+        massa_planeta: float    = self.planeta.massa
         if self.projeteis:
             for projetil in self.projeteis:
-                x_projetil      = projetil.posicao.x
-                y_projetil      = projetil.posicao.y
-                massa_projetil  = projetil.massa
+                x_projetil: int         = projetil.posicao.x
+                y_projetil: int         = projetil.posicao.y
+                massa_projetil: float   = projetil.massa
                 
-                distancia = (self.planeta.posicao - projetil.posicao).length()
+                distancia: int = (self.planeta.posicao - projetil.posicao).length()
 
                 if distancia < 1:
                     distancia = 1
@@ -153,7 +154,7 @@ class Simulacao:
                 cosseno = (x_planeta - x_projetil) / distancia
                 seno    = (y_planeta - y_projetil) / distancia
 
-                forca   = vector()
+                forca   = Vector2()
                 forca.x = forca_gravitacional * cosseno
                 forca.y = forca_gravitacional * seno
 
@@ -165,7 +166,7 @@ class Simulacao:
 
                 distancia = (self.planeta.posicao - projetil.posicao).length()
                 if distancia < (self.planeta.raio + projetil.raio) * 0.98:
-                    projetil.posicao = vector(x_projetil, y_projetil)
+                    projetil.posicao = Vector2(x_projetil, y_projetil)
                     projetil.aceleracao.x = 0
                     projetil.aceleracao.y = 0
                     projetil.velocidade.x = 0
@@ -173,9 +174,9 @@ class Simulacao:
 
     def adicionar_projetil(
         self,
-        posicao         :vector,
-        velocidade      :vector,
-        aceleracao      :vector,
+        posicao         :Vector2,
+        velocidade      :Vector2,
+        aceleracao      :Vector2,
         massa           :float,
         raio            :float
     ) -> None:
@@ -250,10 +251,10 @@ class Simulacao:
                     y = self.planeta.posicao.y - self.planeta.raio - 35
                     self.adicionar_projetil(
                         massa=300,
-                        posicao=vector(x, y),
+                        posicao=Vector2(x, y),
                         raio=6,
-                        velocidade=vector(self.velocidade_inicial_projetil, 0),
-                        aceleracao=vector(0, 0)
+                        velocidade=Vector2(self.velocidade_inicial_projetil, 0),
+                        aceleracao=Vector2(0, 0)
                     )
 
     def run(self) -> None:
