@@ -7,12 +7,12 @@ from typing import Optional
 class Sprite:
     def __init__(
         self,
-        caminho_sprite      :str,
-        transform_scale     :tuple[int, int],
-        x                   :int,
-        y                   :int,
-        convert_alpha       :bool,
-        topleft             :bool
+        caminho_sprite:     str,
+        transform_scale:    tuple[int, int],
+        x:                  int,
+        y:                  int,
+        convert_alpha:      bool,
+        topleft:            bool
     ) -> None:
         self.caminho_sprite: str = caminho_sprite
 
@@ -37,12 +37,12 @@ class Sprite:
 class Corpo:
     def __init__(
         self,
-        massa               :float,
-        raio                :float,
-        posicao             :Vector2,
-        velocidade          :Vector2,
-        aceleracao          :Vector2,
-        sprite              :Optional[pg.Surface] = None
+        massa:              float,
+        raio:               float,
+        posicao:            Vector2,
+        velocidade:         Vector2,
+        aceleracao:         Vector2,
+        sprite:             Optional[pg.Surface] = None
     ) -> None:
         self.massa: float           = massa
         self.raio: float            = raio
@@ -174,11 +174,11 @@ class Simulacao:
 
     def adicionar_projetil(
         self,
-        posicao         :Vector2,
-        velocidade      :Vector2,
-        aceleracao      :Vector2,
-        massa           :float,
-        raio            :float
+        posicao:        Vector2,
+        velocidade:     Vector2,
+        aceleracao:     Vector2,
+        massa:          float,
+        raio:           float
     ) -> None:
         projetil = Corpo(
             massa=massa,
