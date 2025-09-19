@@ -18,9 +18,10 @@ O objetivo é fornecer uma compreensão visual e intuitiva de como a gravidade e
 
 ## Funcionalidades
 
-- **Canhão Interativo:** Controle a velocidade inicial da bala de canhão.
+- **Velocidade Inicial:** A Velocidade inicial do projetil aumenta a cada disparo.
 - **Física em Tempo Real:** A simulação calcula o caminho do projétil com base em fórmulas gravitacionais.
 - **Mecânica Orbital:** Atire com força suficiente para ver a bala entrar em uma órbita estável ou até atingir a velocidade de escape.
+- **Câmera:** As teclas `wasd` movimentam a câmera para ver melhor o comportamento dos projeteis.
 
 ---
 
@@ -40,6 +41,7 @@ A simulação é baseada na Lei da Gravitação Universal de Newton. A trajetór
 - **Biblioteca Gráfica:** Pygame
 - **Biblioteca time (built-in)**
 - **Módulo os (built-in)**
+- **módulo dataclass** (Simulando uma struct)
 
 ---
 
