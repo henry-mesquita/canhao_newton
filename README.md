@@ -4,7 +4,7 @@
 
 <br>
 
-![GIF da Simulação do Canhão de Newton](viz/canhao_newton_video.gif) 
+<img src="viz/canhao_newton_video.gif" alt="GIF of Snake Game Simulation" width="800"/>
 
 ---
 
