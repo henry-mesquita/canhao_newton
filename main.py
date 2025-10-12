@@ -120,7 +120,7 @@ class Simulacao:
         self.DIMENSOES_TELA: tuple[int, int] = (1600, 900)
         self.fonte: pg.Font = pg.font.SysFont(None, 25)
         self.tela: pg.Surface = pg.display.set_mode(self.DIMENSOES_TELA, pg.FULLSCREEN)
-        self.clock = pg.Clock()
+        self.clock = pg.time.Clock()
         self.jogo_rodando: bool = False
         pg.display.set_caption('Canhão de Newton')
 
