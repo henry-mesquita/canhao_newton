@@ -137,11 +137,15 @@ class Simulacao:
         self.caminho_torre: str      = os.path.join(IMG_DIR, 'torre.png')
         self.caminho_canhao: str     = os.path.join(IMG_DIR, 'canhao.png')
         self.caminho_fundo: str      = os.path.join(IMG_DIR, 'ceu.png')
+        
 
         # CARREGA OS SPRITES DOS CORPOS DA SIMULACAO
         self.sprite_planeta: str     = pg.image.load(self.caminho_planeta).convert_alpha()
         self.sprite_projetil: str    = pg.image.load(self.caminho_projetil).convert_alpha()
 
+        # ALTERA O ICONE DA JANELA
+        pg.display.set_icon(self.sprite_planeta)
+        
         x_camera = self.DIMENSOES_TELA[0] // 2
         y_camera = self.DIMENSOES_TELA[1] // 2
 
@@ -193,7 +197,7 @@ class Simulacao:
             x=x_canhao,
             y=y_canhao
         )
-    
+
     def calcular_posicao_sprite(
             self,
             pos_sprite:     Vector2,
